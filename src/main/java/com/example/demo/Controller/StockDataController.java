@@ -37,8 +37,14 @@ public class StockDataController {
 
     @GetMapping
     public ResponseEntity<List<Dtostockdata>> obtenerYExportarDatos(
-            @RequestParam String parametro,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) {
+            @RequestParam(value = "parametro", defaultValue = "local") String parametro, // valor por defecto "local"
+            @RequestParam(value = "fecha", required = false) 
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) { // fecha opcional
+
+        if (fecha == null) {
+            fecha = LocalDate.now();
+        }
+
         List<Dtostockdata> stockDataList = scrapingService.scrapeDtostockdata(parametro, fecha);
 
         String filePath = "stock_data.xlsx";
